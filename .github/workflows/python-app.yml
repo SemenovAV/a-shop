@@ -37,4 +37,6 @@ jobs:
         SECRET_KEY: ${{secrets.SECRET_KEY}}
         PYTHONPATH: ./backend
       run: |
-        coverage run --source=backend -m pytest --suppress-no-test-exit-code
+        python backend/manage.py migrate
+        python backend/manage.py loaddata backend/fixture.json
+        # coverage run --source=backend -m pytest --suppress-no-test-exit-code

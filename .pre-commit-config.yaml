@@ -4,16 +4,6 @@
     - id: check-merge-conflict
     - id: debug-statements
 
-- repo: https://github.com/asottile/seed-isort-config
-  rev: v2.2.0
-  hooks:
-    - id: seed-isort-config
-
-- repo: https://github.com/timothycrosley/isort
-  rev: 4.3.21  # pick the isort version you'd like to use from https://github.com/timothycrosley/isort/releases
-  hooks:
-    - id: isort
-
 - repo: local
 
   hooks:
@@ -46,7 +36,7 @@
                 # PT013 found incorrect import of pytest, use simple 'import pytest' instead
             "--max-line-length=88",
             "--per-file-ignores=tests.py:S101",
-            "--exclude=manage.py"
+            "--exclude=manage.py, */migrations/*"
             # S101 Use of assert detected
         ]
 

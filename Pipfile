@@ -41,8 +41,6 @@ pytest-cov = "*"
 pytest-django = "*"
 pytest-custom-exit-code = "*"
 flake8-django = "*"
-isort = "*"
-seed-isort-config = "*"
 
 [requires]
 python_version = "3.7"
