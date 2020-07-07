@@ -5,11 +5,12 @@ from django.contrib.auth.admin import GroupAdmin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from users.forms import MyUserChangeForm
-from users.models import CustomUser
 from users.models import Group
+from users.models import User
 
 
 class MyUserAdmin(UserAdmin):
+    list_display = ("username", "is_staff")
     form = MyUserChangeForm
     fieldsets = (
         (None, {"fields": ("username", "password")}),
@@ -22,38 +23,43 @@ class MyUserAdmin(UserAdmin):
     def save_model(
         cls: MyUserAdmin,
         request: object,
-        obj: CustomUser,
+        obj: User,
         form: MyUserChangeForm,
         change: bool,
     ) -> None:
-        if change:
-            obj.is_staff = form.cleaned_data["groups"].filter(is_staff=True).exists()
-            obj.save()
-            super().save_model(request, obj, form, change)
+
+        obj.is_staff = (
+            form.cleaned_data["groups"].filter(customgroup__is_staff=True).exists()
+        )
+        super().save_model(
+            cls, request, obj, form, change,
+        )
 
 
 class MyGroupAdmin(GroupAdmin):
     list_display = ("name", "is_staff")
+    fieldsets = ((None, {"fields": ("name", "is_staff", "permissions")}),)
 
     @classmethod
     def save_model(
         cls: MyGroupAdmin, request: object, obj: Group, form: object, change: bool,
     ) -> None:
-        if change:
-            for user in obj.user_set.all():
-                if (
-                    obj.is_staff is False
-                    and not user.groups.filter(is_staff=True)
-                    .exclude(pk=obj.pk)
-                    .exists()
-                ):
-                    user.is_staff = False
-                    user.save()
-                else:
-                    user.is_staff = True
-                    user.save()
-            super().save_model(request, obj, form, change)
+        super().save_model(
+            cls, request, obj, form, change,
+        )
+        for user in obj.user_set.all():
+            if (
+                obj.customgroup.is_staff is False
+                and not user.groups.filter(castomgroups__is_staff=True)
+                .exclude(pk=obj.pk)
+                .exists()
+            ):
+                user.is_staff = False
+                user.save()
+            else:
+                user.is_staff = True
+                user.save()
 
 
-admin.site.register(CustomUser, MyUserAdmin)
+admin.site.register(User, MyUserAdmin)
 admin.site.register(Group, MyGroupAdmin)
