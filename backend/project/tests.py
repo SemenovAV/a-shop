@@ -40,10 +40,21 @@ class TestProject(SimpleTestCase):
 
 
 class TestProjectWithDB(TestCase):
+    fixtures = ["backend/fixture.json"]
+
     @classmethod
-    def test_urls(cls: TestCase) -> None:
+    def test_urls_login(cls: TestCase) -> None:
         c = Client()
         login_response = c.post(
             "/admin/login/", {"username": "admin", "password": "admin",},
+        )
+        assert login_response.status_code == 302
+        assert login_response.url == "/accounts/profile/"
+
+    @classmethod
+    def test_urls_false_login(cls: TestCase) -> None:
+        c = Client()
+        login_response = c.post(
+            "/admin/login/", {"username": "user", "password": "admin",},
         )
         assert login_response.status_code == 200
