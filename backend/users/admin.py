@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from __future__ import annotations
 
 from django.contrib import admin
@@ -13,9 +14,9 @@ class MyUserAdmin(UserAdmin):
     list_display = ("username", "is_staff")
     form = MyUserChangeForm
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("username", "password", "groups")}),
         (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
-        (_("Permissions"), {"fields": ("is_active", "groups"),}),
+        (_("Permissions"), {"fields": ("is_active",),}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
 
@@ -27,10 +28,10 @@ class MyUserAdmin(UserAdmin):
         form: MyUserChangeForm,
         change: bool,
     ) -> None:
+        data = form.cleaned_data.get("groups")
+        if data:
+            obj.is_staff = data.filter(group__is_staff=True).exists()
 
-        obj.is_staff = (
-            form.cleaned_data["groups"].filter(customgroup__is_staff=True).exists()
-        )
         super().save_model(
             cls, request, obj, form, change,
         )
@@ -50,7 +51,7 @@ class MyGroupAdmin(GroupAdmin):
         for user in obj.user_set.all():
             if (
                 obj.customgroup.is_staff is False
-                and not user.groups.filter(castomgroups__is_staff=True)
+                and not user.groups.filter(groups__is_staff=True)
                 .exclude(pk=obj.pk)
                 .exists()
             ):
