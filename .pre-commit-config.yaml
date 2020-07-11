@@ -59,3 +59,9 @@
       entry: yesqa
       language: system
       types: [python]
+
+- repo: https://github.com/commitizen-tools/commitizen
+  rev: master
+  hooks:
+    - id: commitizen
+      stages: [commit-msg]
