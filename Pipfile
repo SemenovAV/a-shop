@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 Django = "*"
 commitizen = "*"
+mypy = "*"
+django-stubs = "*"
+MonkeyType = "*"
 
 [dev-packages]
 pre-commit = "*"

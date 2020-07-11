@@ -7,9 +7,10 @@ For more information on this file, see
 https://docs.djangoproject.com/en/3.0/howto/deployment/asgi/
 """
 import os
+from typing import Any
 
-from django.core.asgi import get_asgi_application
+from django.core.asgi import get_asgi_application  # type: ignore
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 
-application = get_asgi_application()
+application: Any = get_asgi_application()

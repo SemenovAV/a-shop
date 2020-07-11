@@ -19,9 +19,8 @@ class TestAppWithDB(TestCase):
     fixtures = ["backend/fixture.json"]
 
     @classmethod
-    def setUpTestData(cls: TestAppWithDB) -> None:
-        cls.group_name = "test_group"
-        Group.objects.create(name=cls.group_name, is_staff=True)
+    def setUpTestData(cls: TestAppWithDB) -> None:  # type: ignore
+        Group.objects.create(name="test_group", is_staff=True)
 
     def test_group_model_is_staff_label(self: TestAppWithDB) -> None:
         group = Group.objects.get(id=1)
