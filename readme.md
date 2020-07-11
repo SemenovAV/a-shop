@@ -1,4 +1,4 @@
-![Python application](https://github.com/SemenovAV/core/workflows/Python%20application/badge.svg)
+![CI](https://github.com/SemenovAV/a-shop/workflows/CI/badge.svg)
 
 # Django template
 
